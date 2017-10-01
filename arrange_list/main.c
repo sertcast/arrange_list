@@ -7,15 +7,6 @@
 //
 
 #include "linked_list.h"
-void cp_list(my_list *list, my_list*cplist){
-    my_list *current_list = list;
-    my_list *cp_list = cplist;
-    while(current_list->next != NULL){
-        append_list(cp_list, current_list->value);
-        current_list = current_list->next;
-    }
-    append_list(cp_list, current_list->value);
-}
 
 bool arrange_check(my_list *list){
     my_list *current = list;
@@ -73,7 +64,7 @@ my_list *arranged_list(my_list *list){
 }
 
 int main(int argc, const char * argv[]) {
-    int theList[] = {3,4,6,5,2,1};
+    int theList[] = {3,4,6,5,2,1,-1,-5};
     my_list *list = create_list();
     int i;
     for(i = 0; i < (int)sizeof(theList)/4; i++){
@@ -81,7 +72,6 @@ int main(int argc, const char * argv[]) {
     }
     my_list *my_ar_list = arranged_list(list);
     print_list(my_ar_list);
-    print_list(list);
     free_list(list);
     free_list(my_ar_list);
     return 0;
