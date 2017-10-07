@@ -17,7 +17,7 @@
 #include <stdbool.h>
 
 struct my_list {
-    int value;
+    double value;
     struct my_list *next, *prev;
     bool added_value;
 };
@@ -26,8 +26,8 @@ typedef struct my_list my_list;
 my_list *create_list(void);
 my_list *go_end(my_list *the_list);
 void print_list(my_list *list);
-void change_value(my_list *the_node, int value);
-void append_list(my_list *the_list,int value);
+void change_value(my_list *the_node, double value);
+void append_list(my_list *the_list,double value);
 my_list *go_value(my_list *list, int place);
 void free_list(my_list *the_list);
 int length_list(my_list* list);

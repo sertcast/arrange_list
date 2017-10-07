@@ -8,72 +8,71 @@
 
 #include "linked_list.h"
 
-bool arrange_check(my_list *list){
-    my_list *current = list;
-    while (current->next != NULL) {
-        if(current->value > current->next->value){
+bool arrange_check(double *list, int *psize){
+    double *current = list;
+    current++;
+    double *next = current;
+    current--;
+    int i;
+    for(i = 0; i < (*psize)-1; i++){
+        if(*current > *next){
             return false;
         }
-        current = current->next;
+        current++;
+        next++;
     }
     return true;
 }
-
-my_list *arranged_list(my_list *list){
-    my_list *arlist = create_list();
-    cp_list(list, arlist);
-    my_list *current = arlist;
-    int cur_place = 0;
-    int lengthList = length_list(arlist)+1;
-    while(!arrange_check(arlist)){
-        if(lengthList % 2 == 1){
-            if(cur_place % 2 == 0 ){
-                current  = arlist;
-                cur_place = 0;
+double *parse_file(char*filename, int *psize){
+    my_list *the_list = create_list();
+    int len_list = 0, i;
+    char *line = (char*)malloc(sizeof(char));
+    FILE *num_file = fopen(filename, "r");
+    int a;
+    for(i = 0; i < 200; i++){
+        fgets(line, 20, num_file);
+        if(atof(line)!= 0.0){
+            append_list(the_list, atof(line));
+            len_list++;
+        }
+    }
+    fclose(num_file);
+    
+    double *list = (double*)malloc(len_list*sizeof(double));
+    my_list *current = the_list;
+    for(a = 0; a < len_list; a++){
+        list[a] = current->value;
+        current = current->next;
+    }
+    free_list(the_list);
+    *psize = len_list;
+    return list;
+}
+void arrange_list(double *list, int *psize){
+    double *ar_list = list;
+    int i;
+    int odd = 0;
+    while(!arrange_check(list, psize)){
+        if((*psize)%2 == 0){
+            if(odd == 0){
+                for(i = 0; i < (*psize)-1; i++){
+                    
+                }
+                odd++;
             }else{
-                current  = arlist->next;
-                cur_place = 1;
+                odd--;
             }
         }else{
-            if(cur_place % 2 == 0 ){
-                current = arlist;
-                cur_place = 0;
-            }else{
-                current = arlist;
-                if(current->value > (go_end(arlist))->value){
-                    switch_list(arlist, 0, lengthList-1);
-                }
-                current = current->next;
-                cur_place = 1;
-            }
+            
         }
-        while(current->next->next != NULL){
-            if(current->value > current->next->value){
-                switch_list(arlist, cur_place, cur_place+1);
-            }
-            current = current->next->next;
-            cur_place += 2;
-            if(current->next==NULL)break;
-        }
-        if(current->next!=NULL &&current->value > current->next->value){
-            switch_list(current, 0, 1);
-        }
-        cur_place++;
     }
-    return arlist;
 }
 
 int main(int argc, const char * argv[]) {
-    int theList[] = {3,4,6,5,2,1,-1,-5};
-    my_list *list = create_list();
-    int i;
-    for(i = 0; i < (int)sizeof(theList)/4; i++){
-        append_list(list, theList[i]);
-    }
-    my_list *my_ar_list = arranged_list(list);
-    print_list(my_ar_list);
-    free_list(list);
-    free_list(my_ar_list);
+    int *size = (int*)malloc(sizeof(int));
+    double *list = parse_file("/Users/mert/Desktop/data1.txt",size);
+    arrange_list(list,size);
+    free(list);
     return 0;
 }
 
