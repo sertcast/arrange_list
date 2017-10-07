@@ -25,12 +25,12 @@ bool arrange_check(double *list, int *psize){
 }
 double *parse_file(char*filename, int *psize){
     my_list *the_list = create_list();
-    int len_list = 0, i;
-    char *line = (char*)malloc(sizeof(char));
+    int len_list = 0;
+    char line[200];
     FILE *num_file = fopen(filename, "r");
     int a;
-    for(i = 0; i < 200; i++){
-        fgets(line, 20, num_file);
+    while(!feof(num_file)){
+        fgets(line, 200, num_file);
         if(atof(line)!= 0.0){
             append_list(the_list, atof(line));
             len_list++;
@@ -49,30 +49,86 @@ double *parse_file(char*filename, int *psize){
     return list;
 }
 void arrange_list(double *list, int *psize){
-    double *ar_list = list;
+    double *ar_list = list, *next = &(list[1]), keep;
     int i;
-    int odd = 0;
+    int ilk = 0;
     while(!arrange_check(list, psize)){
         if((*psize)%2 == 0){
-            if(odd == 0){
-                for(i = 0; i < (*psize)-1; i++){
-                    
+            ar_list = list;
+            next = &(list[1]);
+            if(ilk == 0){
+                for(i = 0; i < ((*psize)/2) - 1; i++){
+                    if(*ar_list > *next){
+                        keep = *ar_list;
+                        *ar_list = *next;
+                        *next = keep;
+                    }
+                    ar_list+=2;
+                    next+=2;
                 }
-                odd++;
+                if(*ar_list > *next){
+                    keep = *ar_list;
+                    *ar_list = *next;
+                    *next = keep;
+                }
+                ilk++;
             }else{
-                odd--;
+                if(ar_list[0] > ar_list[(*psize)-1]){
+                    keep = *ar_list;
+                    *ar_list = *next;
+                    *next = keep;
+                }
+                ar_list++;
+                next++;
+                for(i = 0; i < ((*psize)/2) - 1; i++){
+                    if(*ar_list > *next){
+                        keep = *ar_list;
+                        *ar_list = *next;
+                        *next = keep;
+                    }
+                    ar_list+=2;
+                    next+=2;
+                }
+                ilk--;
             }
         }else{
-            
+            ar_list = list;
+            next = &(list[1]);
+            if(ilk == 0){
+                for(i = 0; i < ((*psize)/2) - 1; i++){
+                    if(*ar_list > *next){
+                        keep = *ar_list;
+                        *ar_list = *next;
+                        *next = keep;
+                    }
+                    ar_list+=2;
+                    next+=2;
+                }
+                if(*ar_list > *next){
+                    keep = *ar_list;
+                    *ar_list = *next;
+                    *next = keep;
+                }
+                ilk++;
+            }else{
+                ar_list++;
+                next++;
+                for(i = 0; i < ((*psize)/2) - 1; i++){
+                    if(*ar_list > *next){
+                        keep = *ar_list;
+                        *ar_list = *next;
+                        *next = keep;
+                    }
+                    ar_list+=2;
+                    next+=2;
+                }
+                ilk--;
+            }
         }
     }
 }
 
 int main(int argc, const char * argv[]) {
-    int *size = (int*)malloc(sizeof(int));
-    double *list = parse_file("/Users/mert/Desktop/data1.txt",size);
-    arrange_list(list,size);
-    free(list);
     return 0;
 }
 
